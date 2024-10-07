@@ -76,41 +76,18 @@ void heapSort(prato *cardapio, int tam) {
     buildHeap(cardapio, tam);
     
     for (int i = tam - 1; i > 0; i--) {
-        // for (int i =0; i<tam; i++) {
-            // printf("%d ", cardapio[i].prioridade);
-        // }
-        // printf("\n");
-        // swap(&cardapio[0], &cardapio[i]); //maior vai para o final do array
-        // for (int i =0; i<tam; i++) {
-            // printf("%d ", cardapio[i].prioridade);
-        // }
-        // printf(" apos troca\n");
+        swap(&cardapio[0], &cardapio[i]); //maior vai para o final do array
 
         //isola o maior elemento da arvore
         if (i%2) { //filho é da forma 2k + 1 (impar), portanto é o filho da esquerda
-            cardapio[(i-1)/2].esq = NULL;
-            // printf("filho da esq de %d\n", i/2);
+            cardapio[(i-1)/2].esq = NULL; //acessa o caminho do pai pro filho isolado
         }
         else{
             cardapio[(i-1)/2].dir = NULL;
-            // printf("filho da dir de %d\n", i/2);
         }
 
         cardapio[i].dir = NULL;
         cardapio[i].esq = NULL;
-
-        
-
-
-
-        // for (int i =0; i<tam/2; i++) {
-            // printf("%d: ", i);
-            // if (cardapio[i].esq == NULL) printf("filho esq: NULL\n");
-            // else printf("Filho esq: %d\n", cardapio[i].esq->prioridade);
-            // if (cardapio[i].dir == NULL) printf("    filho dir: NULL\n");
-            // else printf("    Filho dir: %d\n", cardapio[i].dir->prioridade);
- 
-        // }
 
         heapify(&cardapio[0]);//estabelece max heap com raiz em idx 0
     }
@@ -148,21 +125,7 @@ void buildTree(prato *cardapio, int tam) {
     }
 }
 
-void swap(prato *pai, prato *filho) { //o problema nao ta no swap, ambas as logicas funcionam       
-    // int temp = pai->preparo;
-    // pai->preparo = filho->preparo;
-    // filho->preparo = temp;
-
-    // temp = pai->prioridade;
-    // pai->prioridade = filho->prioridade;
-    // filho->prioridade = temp;
-
-    // char tempString[51];
-    // strcpy(tempString, pai->nome);
-    // strcpy(pai->nome, filho->nome);
-    // strcpy(filho->nome, tempString);
-
-
+void swap(prato *pai, prato *filho) { 
     prato temp = *pai; //troca do pai com o filho
     *pai = *filho;
     *filho = temp;
