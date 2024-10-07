@@ -76,13 +76,41 @@ void heapSort(prato *cardapio, int tam) {
     buildHeap(cardapio, tam);
     
     for (int i = tam - 1; i > 0; i--) {
-        swap(&cardapio[0], &cardapio[i]); //maior vai para o final do array
+        // for (int i =0; i<tam; i++) {
+            // printf("%d ", cardapio[i].prioridade);
+        // }
+        // printf("\n");
+        // swap(&cardapio[0], &cardapio[i]); //maior vai para o final do array
+        // for (int i =0; i<tam; i++) {
+            // printf("%d ", cardapio[i].prioridade);
+        // }
+        // printf(" apos troca\n");
 
         //isola o maior elemento da arvore
-        if ((i/2)%2) { //filho é da forma 2k + 1 (impar), portanto é o filho da esquerda
-            cardapio[i/2].esq = NULL;
+        if (i%2) { //filho é da forma 2k + 1 (impar), portanto é o filho da esquerda
+            cardapio[(i-1)/2].esq = NULL;
+            // printf("filho da esq de %d\n", i/2);
         }
-        else cardapio[i/2].dir = NULL;
+        else{
+            cardapio[(i-1)/2].dir = NULL;
+            // printf("filho da dir de %d\n", i/2);
+        }
+
+        cardapio[i].dir = NULL;
+        cardapio[i].esq = NULL;
+
+        
+
+
+
+        // for (int i =0; i<tam/2; i++) {
+            // printf("%d: ", i);
+            // if (cardapio[i].esq == NULL) printf("filho esq: NULL\n");
+            // else printf("Filho esq: %d\n", cardapio[i].esq->prioridade);
+            // if (cardapio[i].dir == NULL) printf("    filho dir: NULL\n");
+            // else printf("    Filho dir: %d\n", cardapio[i].dir->prioridade);
+ 
+        // }
 
         heapify(&cardapio[0]);//estabelece max heap com raiz em idx 0
     }
@@ -103,42 +131,48 @@ int compare(prato a, prato b) {        //1 se a > b
 }
 
 void buildTree(prato *cardapio, int tam) {
+    int esq, dir;
     for (int i =0; i<(tam/2); i++) { //constroi a arvore
-        cardapio[i].esq = &cardapio[2*i + 1];
-        cardapio[i].dir = &cardapio[2*i + 2];
+        esq = 2*i +1;
+        dir = 2*i +2;
+
+        if (esq < tam)
+            cardapio[i].esq = &cardapio[esq];
+        if (dir < tam)
+            cardapio[i].dir = &cardapio[dir];
     }
 
-    for (int i = (tam/2) -1; i<tam; i++) { //folhas apontam para nulo 
+    for (int i = (tam/2); i<tam; i++) { //folhas apontam para nulo 
         cardapio[i].esq = NULL;
         cardapio[i].dir = NULL;
     }
 }
 
-void swap(prato *pai, prato *filho) { //o problema nao ta no swap, ambas as logicas funcionam   
-    int temp = pai->preparo;
-    pai->preparo = filho->preparo;
-    filho->preparo = temp;
+void swap(prato *pai, prato *filho) { //o problema nao ta no swap, ambas as logicas funcionam       
+    // int temp = pai->preparo;
+    // pai->preparo = filho->preparo;
+    // filho->preparo = temp;
 
-    temp = pai->prioridade;
-    pai->prioridade = filho->prioridade;
-    filho->prioridade = temp;
+    // temp = pai->prioridade;
+    // pai->prioridade = filho->prioridade;
+    // filho->prioridade = temp;
 
-    char tempString[51];
-    strcpy(tempString, pai->nome);
-    strcpy(pai->nome, filho->nome);
-    strcpy(filho->nome, tempString);
+    // char tempString[51];
+    // strcpy(tempString, pai->nome);
+    // strcpy(pai->nome, filho->nome);
+    // strcpy(filho->nome, tempString);
 
 
-    // prato temp = *pai; //troca do pai com o filho
-    // *pai = *filho;
-    // *filho = temp;
+    prato temp = *pai; //troca do pai com o filho
+    *pai = *filho;
+    *filho = temp;
 
-    // prato *filho_esq = pai->esq, //troca dos filhos
-    //       *filho_dir = pai->dir;
+    prato *filho_esq = pai->esq, //troca dos filhos
+          *filho_dir = pai->dir;
 
-    // pai->esq = filho->esq;
-    // pai->dir = filho->dir;
+    pai->esq = filho->esq;
+    pai->dir = filho->dir;
 
-    // filho->esq = filho_esq;
-    // filho->dir = filho_dir;
+    filho->esq = filho_esq;
+    filho->dir = filho_dir;
 }
