@@ -1,0 +1,9 @@
+♠ 532;♦ 456;♠ 4JK;♦ AAA;
+Após ordenar o 3° dígito dos valores:
+♦ 456;♠ 4JK;♦ AAA;♠ 532;
+Após ordenar o 2° dígito dos valores:
+♦ 456;♠ 4JK;♦ AAA;♠ 532;
+Após ordenar o 1° dígito dos valores:
+♦ 456;♠ 4JK;♠ 532;♦ AAA;
+Após ordenar por naipe:
+♦ 456;♦ AAA;♠ 4JK;♠ 532;
