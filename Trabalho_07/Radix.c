@@ -7,35 +7,24 @@
 /*
 Correspondência:
     - valores: 4 = 0 / 5 = 1 / 6 = 2 / 7 = 3 / Q = 4 / J = 5 /K = 6 / A = 7 / 2 = 8 / 3 = 9
-    - naipe? ouro = 0 / espada = 2 / copas = 4 / zap = 6
+    - naipe: ouro = 0 / espada = 1 / copas = 2 / zap = 3
 Vetor de strings: 
     - string[0] = naipe
     - string[1 -> tam] = valor  } ex: entrada: ♦ 5K7 = string['0','1','8','3']
 */ 
 
 char **input(int n, int tam); 
-
 char converte_valor(char valor);
-
-char converte_naipe(char naipe[3]);
-
+char converte_naipe(char naipe[5]);
 void counting_sort(char **baralho, char **ordenado, int n, int digito);
-
 char **radix_sort(char **baralho, int n ,int tam);
-
 char **aloca_matriz(int l, int c);
-
 void libera_matriz(char ***matriz, int l);
-
 void printa_baralho(char **baralho, int n, int tam);
 
 int main () {
     int n, tam; scanf("%d%d", &n, &tam); //n = qtd de cartas, tam = n° de dígitos do valor
     char **baralho = input(n, tam); //recebe entrada
-
-    // for (int i = 0; i<n; i++) {
-    //     printf("%s", baralho[i]);
-    // }
 
     char **ordenado = radix_sort(baralho, n, tam); //ordena e printa ordenacao
 
@@ -66,6 +55,10 @@ void counting_sort(char **baralho, char **ordenado, int n, int digito) {
         strcpy(ordenado[insercao], baralho[i]); //insere o valor no vetor ordenado
     }
 
+    for (int i =0; i<n; i++) {
+        strcpy(baralho[i], ordenado[i]);
+    }
+
 }
 
 char **radix_sort(char **baralho, int n ,int tam) {
@@ -75,13 +68,13 @@ char **radix_sort(char **baralho, int n ,int tam) {
     for(int i = tam; i > 0; i--) {
         counting_sort(baralho, ordenado, n, i);//ordena valores
 
-        printf("Após ordenar o %d° digito dos valores:", i+1);
+        printf("Após ordenar o %d° dígito dos valores:\n", i);
         printa_baralho(baralho, n, tam); 
     }
-    
+
     counting_sort(baralho, ordenado, n, 0); //ordena naipe
 
-    printf("Após ordenar por naipe:");
+    printf("Após ordenar por naipe:\n");
     printa_baralho(baralho, n, tam);
 
     return ordenado;
@@ -91,53 +84,56 @@ char **radix_sort(char **baralho, int n ,int tam) {
 char **input(int n, int tam) {
     char **baralho = aloca_matriz(n, tam +2); // +2 para o naipe e o '\0'
 
-    char aux1; char aux2[3];
+    char aux1; char aux2[5];
     for (int i = 0; i<n; i++) {
         scanf(" %s", aux2);
-        // printf("%s - ", aux2);
-        baralho[i][0] = converte_naipe(aux2); //recebe naipe na forma 0/2/4/6 no id 0
-        
+        baralho[i][0] = converte_naipe(aux2); //recebe naipe na forma 0/1/2/3 no id 0
 
         for(int j = 1 ; j <= tam; j++) {
             scanf(" %c", &aux1);
-            // printf("%c ", aux1);
             baralho[i][j] = converte_valor(aux1); //recebe valor da forma 0/1/2/3/4/5/6/7/8/9 
-        }                                                // no id j (entre 1 e tam)
-        baralho[i][tam+1] = '\0';
-        // printf("%s\n", baralho[i]);
+        }                                               // no id j (entre 1 e tam)
+                                                     
+        baralho[i][tam+1] = '\0'; 
     }
 
     return baralho;
 }
 
 void printa_baralho(char **baralho, int n, int tam){
-    char valores[12] = "4567QJKA23\0"; 
-    wchar_t naipes[12] = L"♦♠♥♣";
-    printf("teste");
+    char valores[] = "4567QJKA23"; 
+    wchar_t naipes[] = L"♦♠♥♣";
 
     for (int i = 0; i<n; i++) {
-        int naipe_id = (baralho[i][0] - '0'); //id do naipe no vetor de correspondencia
-        printf("id naipe: %d", naipe_id);
-        wprintf(L"%lc ", naipes[naipe_id]); //printa naipe
+        int naipe_id = (baralho[i][0] - '0') ; //id do naipe no vetor de correspondencia
+
+        switch (naipe_id) {
+            case(0): printf("♦ "); break;
+            case(1): printf("♠ "); break;
+            case(2): printf("♥ "); break;
+            case(3): printf("♣ "); break;        
+        }        
+        //  wprintf(L"%lc ", naipes[naipe_id]); //printa naipe
 
         for (int j = 1; j<= tam; j++) {
             int valor_id = baralho[i][j] - '0'; //id do valor no vetor de correspondencia
-            printf("id valor: %d", valor_id);
 
             printf("%c", valores[valor_id]); //printa valor
+            
         }
+        printf(";");
     }
     printf("\n");
 }
 
 char **aloca_matriz(int l, int c) { //arrumar
-    char **baralho = malloc(sizeof(char*)*l);
+    char **matriz = malloc(sizeof(char*)*l);
 
     for (int i = 0; i<l; i++) {
-        baralho[i] = malloc(sizeof(char)*c);
+        matriz[i] = malloc(sizeof(char)*c);
     }
     
-    return baralho;
+    return matriz;
 }
 
 void libera_matriz(char ***matriz, int l) {
@@ -150,29 +146,25 @@ void libera_matriz(char ***matriz, int l) {
     *matriz = NULL;
 }
 
-char converte_naipe(char naipe[3]) {
-    char retorno;
-    if (strcmp("♦", naipe)) retorno = '0';
-    else if (strcmp("♠", naipe)) retorno = '1';
-    else if (strcmp("♥", naipe)) retorno = '2';
-    else if (strcmp("♣", naipe)) retorno = '3';
-
-    return retorno;
+char converte_naipe(char naipe[5]) {
+    
+    if (strcmp("♦", naipe) == 0) return '0';
+    else if (strcmp("♠", naipe) == 0) return '1';
+    else if (strcmp("♥", naipe) == 0) return '2';
+    else return '3';
 }
 
 char converte_valor(char valor) {
 
     switch (valor) {
-        case ('Q'): valor = '4'; break;
-        case ('J'): valor = '5'; break;
-        case ('K'): valor = '6'; break;
-        case ('A'): valor = '7'; break;
-        case ('2'): valor = '8'; break;
-        case ('3'): valor = '9'; break;
-        default : valor -= '4'; //caso seja:4/5/6/7
+        case ('Q'): return '4'; 
+        case ('J'): return '5';
+        case ('K'): return '6';
+        case ('A'): return '7';
+        case ('2'): return '8';
+        case ('3'): return '9';
+        default: return valor - 4; //caso seja:4/5/6/7
     }
-
-    return valor;
 }
 
 
