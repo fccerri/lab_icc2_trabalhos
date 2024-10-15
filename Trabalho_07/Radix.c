@@ -17,7 +17,7 @@ char **input(int n, int tam);
 
 char converte_valor(char valor);
 
-char converte_naipe(char naipe[3]);
+char converte_naipe(char naipe[5]);
 
 void counting_sort(char **baralho, char **ordenado, int n, int digito);
 
@@ -33,9 +33,9 @@ int main () {
     int n, tam; scanf("%d%d", &n, &tam); //n = qtd de cartas, tam = n° de dígitos do valor
     char **baralho = input(n, tam); //recebe entrada
 
-    // for (int i = 0; i<n; i++) {
-    //     printf("%s", baralho[i]);
-    // }
+    for (int i = 0; i<n; i++) {
+        printf("b[%d] = %s\n", i, baralho[i]);
+    }
 
     char **ordenado = radix_sort(baralho, n, tam); //ordena e printa ordenacao
 
@@ -91,38 +91,41 @@ char **radix_sort(char **baralho, int n ,int tam) {
 char **input(int n, int tam) {
     char **baralho = aloca_matriz(n, tam +2); // +2 para o naipe e o '\0'
 
-    char aux1; char aux2[3];
+    char aux1; char aux2[5];
     for (int i = 0; i<n; i++) {
-        scanf(" %s", aux2);
-        // printf("%s - ", aux2);
+        scanf(" %3s", aux2);
+        printf("%s - ", aux2);
         baralho[i][0] = converte_naipe(aux2); //recebe naipe na forma 0/2/4/6 no id 0
         
 
         for(int j = 1 ; j <= tam; j++) {
             scanf(" %c", &aux1);
-            // printf("%c ", aux1);
+            printf("%c ", aux1);
             baralho[i][j] = converte_valor(aux1); //recebe valor da forma 0/1/2/3/4/5/6/7/8/9 
         }                                                // no id j (entre 1 e tam)
-        baralho[i][tam+1] = '\0';
-        // printf("%s\n", baralho[i]);
+        baralho[i][tam+1] = '\0'; 
+        printf(" = ");  
+        for (int j = 0; j<tam+2; j++) {
+        printf("%c", baralho[i][j]);        
+        }
+        printf("\n");
     }
 
     return baralho;
 }
 
 void printa_baralho(char **baralho, int n, int tam){
-    char valores[12] = "4567QJKA23\0"; 
+    char valores[] = "4567QJKA23♦\0♠\0♥\0♣\0"; 
     wchar_t naipes[12] = L"♦♠♥♣";
-    printf("teste");
 
     for (int i = 0; i<n; i++) {
-        int naipe_id = (baralho[i][0] - '0'); //id do naipe no vetor de correspondencia
-        printf("id naipe: %d", naipe_id);
-        wprintf(L"%lc ", naipes[naipe_id]); //printa naipe
+        int naipe_id = (baralho[i][0] - '0') + 10; //id do naipe no vetor de correspondencia
+        // printf("id naipe: %d", naipe_id);        
+        printf("%s ", &valores[naipe_id]); //printa naipe
 
         for (int j = 1; j<= tam; j++) {
             int valor_id = baralho[i][j] - '0'; //id do valor no vetor de correspondencia
-            printf("id valor: %d", valor_id);
+            // printf("id valor: %d", valor_id);
 
             printf("%c", valores[valor_id]); //printa valor
         }
@@ -150,29 +153,29 @@ void libera_matriz(char ***matriz, int l) {
     *matriz = NULL;
 }
 
-char converte_naipe(char naipe[3]) {
-    char retorno;
-    if (strcmp("♦", naipe)) retorno = '0';
-    else if (strcmp("♠", naipe)) retorno = '1';
-    else if (strcmp("♥", naipe)) retorno = '2';
-    else if (strcmp("♣", naipe)) retorno = '3';
-
-    return retorno;
+char converte_naipe(char naipe[5]) {
+    
+    if (strcmp("♦", naipe) == 0) return '0';
+    else if (strcmp("♠", naipe) == 0) return '4';
+    else if (strcmp("♥", naipe) == 0) return '6';
+    else return '9';
 }
 
 char converte_valor(char valor) {
 
     switch (valor) {
-        case ('Q'): valor = '4'; break;
-        case ('J'): valor = '5'; break;
-        case ('K'): valor = '6'; break;
-        case ('A'): valor = '7'; break;
-        case ('2'): valor = '8'; break;
-        case ('3'): valor = '9'; break;
-        default : valor -= '4'; //caso seja:4/5/6/7
+        case ('Q'): return '4'; 
+        case ('J'): return '5';
+        case ('K'): return '6';
+        case ('A'): return '7';
+        case ('2'): return '8';
+        case ('3'): return '9';
+        default: return valor - 4; //caso seja:4/5/6/7
     }
-
-    return valor;
+    // case ('4'): return '0';
+        // case ('5'): return '1';
+        // case ('6'): return '2';
+        // case ('7'): return '3'; 
 }
 
 
