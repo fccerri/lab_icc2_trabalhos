@@ -17,10 +17,10 @@ char **input(int n, int tam);
 char converte_valor(char valor);
 char converte_naipe(char naipe[5]);
 void stooge_sort(char **baralho, int inicio, int fim);
+void swap(char **a, char **b);
 char **aloca_matriz(int l, int c);
 void libera_matriz(char ***matriz, int l);
 void printa_baralho(char **baralho, int n, int tam);
-void swap(char **a, char **b);
 
 int main () {
     int n, tam; scanf("%d%d", &n, &tam); //n = qtd de cartas, tam = n° de dígitos do valor
@@ -35,22 +35,18 @@ int main () {
 }
 
 void stooge_sort(char **baralho, int inicio, int fim) {
-    if (inicio == fim) return;
-    if (strcmp(baralho[inicio], baralho[fim]) > 0) {
-        swap(&baralho[inicio],& baralho[fim]);
-    }
+    if (strcmp(baralho[inicio], baralho[fim]) > 0)
+        swap(&baralho[inicio], &baralho[fim]);
+    
+    if (inicio + 1 >= fim) return;
 
-    int tam = fim - inicio + 1; //+1 garante o arredontamento para cima 
-    int novo_inicio = inicio + tam/3, novo_fim =  fim - tam/3;
+    int tam = fim - inicio +1;//+1 garante que o arredondamento de 1/3 seja para cima
+    int novo_fim = fim - tam/3, novo_inicio = inicio + tam/3;
 
-
-    if (fim - inicio + 1 > 2) {
-        stooge_sort(baralho, inicio, novo_fim); 
-        stooge_sort(baralho, novo_inicio, fim);
-        stooge_sort(baralho, inicio, novo_fim);
-    }
+    stooge_sort(baralho, inicio,novo_fim); //primeiros 2/3
+    stooge_sort(baralho, novo_inicio, fim); //ultimos 2/3
+    stooge_sort(baralho, inicio, novo_fim); //primeiros 2/3 
 }
-
 
 char **input(int n, int tam) {
     char **baralho = aloca_matriz(n, tam +2); // +2 para o naipe e o '\0'
@@ -73,7 +69,7 @@ char **input(int n, int tam) {
 
 void printa_baralho(char **baralho, int n, int tam){
     char valores[] = "4567QJKA23"; 
-    wchar_t naipes[] = L"♦♠♥♣";
+    // wchar_t naipes[] = L"♦♠♥♣";
 
     for (int i = 0; i<n; i++) {
         int naipe_id = (baralho[i][0] - '0') ; //id do naipe no vetor de correspondencia
@@ -138,8 +134,8 @@ char converte_valor(char valor) {
     }
 }
 
-void swap(char **a, char **b) { 
-    char *temp = *a; // Troca as referências das strings
+void swap(char **a, char **b) {
+    char **temp = a;
     *a = *b;
-    *b = temp;
+    *b = *temp;
 }
