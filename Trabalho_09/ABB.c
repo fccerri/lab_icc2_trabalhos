@@ -18,7 +18,7 @@ NO *insereNo(int valor, NO *raiz);
 void BuscaCaminho(NO *raiz, int valor);
 void liberaArvore(NO **raiz);
 
-int main () {
+int main () { 
     int n, aux; scanf("%d", &n);
 
     NO *raiz = constroiABB(n);
