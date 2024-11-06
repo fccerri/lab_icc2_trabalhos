@@ -31,9 +31,10 @@ int main () {
     // printf("\ntempo da busca binaria: %lf\n", tempo);
 
     // start = clock(); 
-    // dfs(raiz, aux); //busca linear para comparacao
+    // if (dfs(raiz, aux) == -1) //busca linear para comparacao
+    //     printf("-1");
     // tempo = endTime(start);
-    // printf("tempo da dfs: %lf\n", tempo);
+    // printf("\ntempo da dfs: %lf\n", tempo);
 
     liberaArvore(&raiz);
     return 0;
