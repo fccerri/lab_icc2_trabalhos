@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-// double endTime(clock_t start){
-//     clock_t finish = clock();
-//     return ((double)(finish - start))/CLOCKS_PER_SEC;
-// }
+double endTime(clock_t start){
+    clock_t finish = clock();
+    return ((double)(finish - start))/CLOCKS_PER_SEC;
+}
 
 typedef struct no_ {
     struct no_ *filho_esq; //ponteiro para o filho esquerdo
@@ -16,6 +16,7 @@ typedef struct no_ {
 NO *constroiABB(int n);
 NO *insereNo(int valor, NO *raiz);
 void BuscaCaminho(NO *raiz, int valor);
+int dfs(NO *raiz, int valor);
 void liberaArvore(NO **raiz);
 
 int main () { 
@@ -26,10 +27,14 @@ int main () {
     // double tempo; clock_t start = clock();
     scanf("%d", &aux);
     BuscaCaminho(raiz, aux);
-    printf("\n");
     // tempo = endTime(start);
+    // printf("\ntempo da busca binaria: %lf\n", tempo);
 
-    // printf("tempo de busca %lf", tempo);
+    // start = clock(); 
+    // dfs(raiz, aux); //busca linear para comparacao
+    // tempo = endTime(start);
+    // printf("tempo da dfs: %lf\n", tempo);
+
     liberaArvore(&raiz);
     return 0;
 }
@@ -54,14 +59,14 @@ NO *insereNo(int valor, NO *raiz){
         aux->dado = valor; //guarda o seu valor
         return aux;
     }
-    
+        
     if (valor >= raiz->dado) { //caso valor seja MAIOR que a raiz (insercao no lado DIREITO)
         raiz->filho_dir =  insereNo(valor, raiz->filho_dir); //faz chamada recursiva para o filho direito
     }
     else { //caso valor seja MENOR que a raiz (insercao no lado ESQUERDO)
             raiz->filho_esq = insereNo(valor, raiz->filho_esq); //faz chamada recursiva para o filho esquerdo
-        }
-    
+    }
+        
     return raiz;
 }
 
@@ -79,6 +84,16 @@ void BuscaCaminho(NO *raiz, int valor) {
     else if (raiz->dado < valor) { //continua busca na arvore da direita
         BuscaCaminho(raiz->filho_dir, valor);
     }   
+}
+
+int dfs(NO *raiz, int valor) {
+    if (raiz == NULL) return -1; //caso não encontre
+    printf("%d ", raiz->dado); //printa o caminho 
+    if (raiz->dado == valor) return valor; //caso o valor tenha sido encontrado
+
+    if (dfs(raiz->filho_esq, valor) == valor) return valor; //caso o valor ja tenha sido encontrado
+
+    dfs(raiz->filho_dir, valor);
 }
 
 void liberaArvore(NO **raiz) {
