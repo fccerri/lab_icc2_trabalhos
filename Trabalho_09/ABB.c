@@ -97,14 +97,3 @@ int dfs(NO *raiz, int valor) {
     dfs(raiz->filho_dir, valor);
 }
 
-void liberaArvore(NO **raiz) {
-    if (*raiz != NULL) {
-        liberaArvore(&(*raiz)->filho_dir); //chamada recursiva para arvore da direita
-        liberaArvore(&(*raiz)->filho_esq); //chamada recursiva para arvore da esquerda
-        (*raiz)->filho_esq = NULL;
-        (*raiz)->filho_dir = NULL;
-
-        free(*raiz); //libera a memoria
-        *raiz = NULL;
-    }
-}
